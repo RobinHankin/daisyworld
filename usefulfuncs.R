@@ -23,3 +23,24 @@ parameters <- list(
 `albedo` <- function(W,B,parameters){with(parameters, (1-W-B)*Ag + W*Aw + B*Ab)} #eq 5
 `T_white` <- function(T_e, A){with(parameters, qdash*(A-Aw) + T_e ) } #eq 7 (white)
 `T_black` <- function(T_e, A){with(parameters, qdash*(A-Ab) + T_e ) } #eq 7 (black)
+
+
+## modified from "Chaos in the atmosphere"
+watson <- function(t, state, parameters) {
+    with(as.list(c(state, parameters)), {
+        x <- bare_fertile(W,B)
+        A <- albedo(W,B,parameters)
+        T_e <- T_effective(A,L,parameters)
+
+        T_W <- T_white(T_e,A)
+        T_B <- T_black(T_e,A)
+        
+        beta_W <- growth_rate(T_W,parameters)
+        beta_B <- growth_rate(T_B,parameters)
+        
+        dW <-  W*(x*beta_W-gamma)
+        dB <-  B*(x*beta_B-gamma)
+        list(c(dW,dB),T_e=T_e,bare=x)
+    })
+}
+
