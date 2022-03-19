@@ -1,5 +1,9 @@
 ## Supporting functions for daisyworld
 
+
+library("deSolve")
+
+## First define physical parameters, all in one place:
 parameters <- list(
     L  = 1,  # solar luminosity
     gamma = 0.3, # death rate
@@ -17,6 +21,8 @@ parameters <- list(
     
 )
 
+## Next define R functions for the equations in Watson and Lovelock:
+
 `bare_fertile` <- function(W,B){with(parameters,p-W-B)} #eq 2
 `growth_rate` <- function(temp,parameters){with(parameters, 1-parabolic*(T_opt-temp)^2)} #eq 3
 `T_effective` <- function(A,L,parameters){with(parameters, (S*L*(1-A)/sigma)^(0.25) - triple_point)} #eq 4
@@ -25,8 +31,10 @@ parameters <- list(
 `T_black` <- function(T_e, A){with(parameters, qdash*(A-Ab) + T_e ) } #eq 7 (black)
 
 
-## modified from "Chaos in the atmosphere"
-watson <- function(t, state, parameters) {
+## Now define a function, watson(), for use with ode() [e.g. as used
+## in ode.R]; this modified from "Chaos in the atmosphere"
+
+`watson` <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
         x <- bare_fertile(W,B)
         A <- albedo(W,B,parameters)
