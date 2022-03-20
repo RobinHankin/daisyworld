@@ -1,0 +1,39 @@
+---
+title: "figure 1 of Watsion and Lovelock"
+author: "Robin KS Hankin"
+date: "20/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("usefulfuncs.R")
+```
+
+Figure 1 of Watson and Lovelock: Daisworld
+
+```{r cars}
+daisy <- function(parameters,all=FALSE){
+  initial_state <- c(W=0.8, B=0.1) # initial value. NB: figure 1 is sensitive to this!  
+  times <- seq(0, 10, by = 1)      # times for output
+  jj <- ode(y = initial_state, times = times, func = watson, parms = parameters)
+  if(all){
+    return(jj)
+  } else {
+    return(c(jj[nrow(jj),-1]))
+  }
+}
+
+L <- seq(from=0.6,to=1.6,by=0.02)
+M <- matrix(0,length(L),3)
+for(i in seq_along(L)){
+  p <- parameters
+  p$L <- L[i]
+  M[i,] <- daisy(parameters=p)
+}
+colnames(M) <- c("W","B","T_e")
+M <- as.data.frame(cbind(L=L,M))
+plot(T_e~L,data=M,type='b')
+plot(W~L,data=M,type='b',pch=1)
+points(B~L,data=M,type='b',pch=16)
+```
