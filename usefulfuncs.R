@@ -7,7 +7,7 @@ library("deSolve")
 parameters <- list(
     L  = 1,  # solar luminosity
     gamma = 0.3, # death rate
-    parabolic=0.003265,
+    parabolic = 0.003265,
     T_opt = 22.5,
     S     = 917, # SI!  In fig 1, W&L use ergs/cm^2s FFS
     sigma = 5.670374419e-8, # stefan's constant: SI
@@ -25,7 +25,7 @@ parameters <- list(
 
 `bare_fertile` <- function(W,B){with(parameters,p-W-B)} #eq 2
 `growth_rate` <- function(temp,parameters){with(parameters, 1-parabolic*(T_opt-temp)^2)} #eq 3
-`T_effective` <- function(A,L,parameters){with(parameters, (S*L*(1-A)/sigma)^(0.25) - triple_point)} #eq 4
+`T_eff` <- function(A,L,parameters){with(parameters, (S*L*(1-A)/sigma)^(0.25) - triple_point)} #eq 4
 `albedo` <- function(W,B,parameters){with(parameters, (1-W-B)*Ag + W*Aw + B*Ab)} #eq 5
 `T_white` <- function(T_e, A){with(parameters, qdash*(A-Aw) + T_e ) } #eq 7 (white)
 `T_black` <- function(T_e, A){with(parameters, qdash*(A-Ab) + T_e ) } #eq 7 (black)
@@ -38,7 +38,7 @@ parameters <- list(
     with(as.list(c(state, parameters)), {
         x <- bare_fertile(W,B)
         A <- albedo(W,B,parameters)
-        T_e <- T_effective(A,L,parameters)
+        T_e <- T_eff(A,L,parameters)
 
         T_W <- T_white(T_e,A)
         T_B <- T_black(T_e,A)
@@ -48,7 +48,7 @@ parameters <- list(
         
         dW <-  W*(x*beta_W-gamma)
         dB <-  B*(x*beta_B-gamma)
-        list(c(dW,dB),T_e=T_e,bare=x)
+        list(c(dW,dB),T_e=T_e)
     })
 }
 
