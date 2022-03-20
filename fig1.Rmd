@@ -72,13 +72,13 @@ for(i in seq_along(L)){
 colnames(M) <- c("L","W","B","T_e")
 
 
-plot(T_e~L,data=M_old,type='b')
+plot(T_e~L,data=M_old,type='b',main="planetary temperature as a function of luminosity")
 points(T_e~L,data=M,type='b',col='red')
 legend("topleft",col=c("black","red"),legend=c("Watson and Lovelock","Hankin and Mitchell")
 ,lty=1,pch=1)
 
 
-plot(W~L,data=M_old,type='b',pch=1,ylim=0:1)
+plot(W~L,data=M_old,type='b',pch=1,ylim=0:1,main="White and black daisy coverage as a function of luminosity")
 points(B~L,data=M_old,type='b',pch=16)
 
 points(W~L,data=M,type='b',pch=1,col='red')
