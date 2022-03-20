@@ -43,7 +43,7 @@ Now we can run `daisy()` across a range of luminosity `L`:
 
 ```{r usedaisy}
 
-L <- seq(from=0.6,to=1.6,by=0.02)
+L <- seq(from=0.6,to=2,by=0.02)
 M <- matrix(0,length(L),4)
 
 for(i in seq_along(L)){
@@ -54,4 +54,33 @@ head(M)
 plot(T_e~L,data=M,type='b')
 plot(W~L,data=M,type='b',pch=1)
 points(B~L,data=M,type='b',pch=16)
+```
+
+
+Now the same graphs again but we will superimpose Hankin and Mitchell in red:
+
+
+```{r hankinmitchell}
+p_HM <- parameters
+p_HM$gamma <- 0
+M_old <- M # previous chunk
+M <- matrix(0,length(L),4)
+
+for(i in seq_along(L)){
+  M[i,] <- daisy(p_HM,L=L[i])
+}
+colnames(M) <- c("L","W","B","T_e")
+
+
+plot(T_e~L,data=M_old,type='b')
+points(T_e~L,data=M,type='b',col='red')
+legend("topleft",col=c("black","red"),legend=c("Watson and Lovelock","Hankin and Mitchell")
+,lty=1,pch=1)
+
+
+plot(W~L,data=M_old,type='b',pch=1,ylim=0:1)
+points(B~L,data=M_old,type='b',pch=16)
+
+points(W~L,data=M,type='b',pch=1,col='red')
+points(B~L,data=M,type='b',pch=16,col='red')
 ```
